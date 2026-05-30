@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Webcam from "react-webcam";
 import { PageWrapper } from "../components/page-wrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -20,7 +21,9 @@ type Detection = {
 };
 
 type DetectionResponse = {
-  filename: string;
+  filename?: string;
+  image_width?: number;
+  image_height?: number;
   total_detections: number;
   detections: Detection[];
 };
@@ -28,13 +31,20 @@ type DetectionResponse = {
 export function DetectionPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isWebcamActive, setIsWebcamActive] = useState(false);
+  const [isWebcamProcessing, setIsWebcamProcessing] = useState(false);
+
   const [detectionResults, setDetectionResults] =
+    useState<DetectionResponse | null>(null);
+
+  const [webcamResults, setWebcamResults] =
     useState<DetectionResponse | null>(null);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const webcamRef = useRef<Webcam | null>(null);
+  const webcamBusyRef = useRef(false);
 
   const [imageSize, setImageSize] = useState({
     naturalWidth: 0,
@@ -97,8 +107,87 @@ export function DetectionPage() {
     }
   };
 
+  const predictWebcamFrame = async () => {
+    if (!webcamRef.current || webcamBusyRef.current) return;
+
+    const screenshot = webcamRef.current.getScreenshot();
+    if (!screenshot) return;
+
+    webcamBusyRef.current = true;
+    setIsWebcamProcessing(true);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/predict-frame", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: screenshot }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Webcam backend error");
+      }
+
+      const data = await response.json();
+      setWebcamResults(data);
+    } catch (error) {
+      console.error("Webcam prediction error:", error);
+    } finally {
+      webcamBusyRef.current = false;
+      setIsWebcamProcessing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isWebcamActive) return;
+
+    const interval = setInterval(() => {
+      predictWebcamFrame();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isWebcamActive]);
+
   const toggleWebcam = () => {
-    setIsWebcamActive(!isWebcamActive);
+    setIsWebcamActive((prev) => {
+      const next = !prev;
+
+      if (!next) {
+        setWebcamResults(null);
+      }
+
+      return next;
+    });
+  };
+
+  const renderBoxes = (
+    detections: Detection[] | undefined,
+    width: number,
+    height: number
+  ) => {
+    if (!detections || width === 0 || height === 0) return null;
+
+    return detections.map((item, index) => {
+      const [x1, y1, x2, y2] = item.bbox;
+
+      return (
+        <div
+          key={index}
+          className="absolute border-2 border-red-500"
+          style={{
+            left: `${(x1 / width) * 100}%`,
+            top: `${(y1 / height) * 100}%`,
+            width: `${((x2 - x1) / width) * 100}%`,
+            height: `${((y2 - y1) / height) * 100}%`,
+          }}
+        >
+          <span className="absolute -top-7 left-0 whitespace-nowrap rounded bg-red-500 px-2 py-1 text-xs font-medium text-white">
+            {item.class} {(item.confidence * 100).toFixed(1)}%
+          </span>
+        </div>
+      );
+    });
   };
 
   return (
@@ -130,37 +219,11 @@ export function DetectionPage() {
                         className="max-h-full max-w-full object-contain"
                       />
 
-                      {detectionResults?.detections?.map((item, index) => {
-                        if (
-                          imageSize.naturalWidth === 0 ||
-                          imageSize.naturalHeight === 0
-                        ) {
-                          return null;
-                        }
-
-                        const [x1, y1, x2, y2] = item.bbox;
-
-                        return (
-                          <div
-                            key={index}
-                            className="absolute border-2 border-red-500"
-                            style={{
-                              left: `${(x1 / imageSize.naturalWidth) * 100}%`,
-                              top: `${(y1 / imageSize.naturalHeight) * 100}%`,
-                              width: `${
-                                ((x2 - x1) / imageSize.naturalWidth) * 100
-                              }%`,
-                              height: `${
-                                ((y2 - y1) / imageSize.naturalHeight) * 100
-                              }%`,
-                            }}
-                          >
-                            <span className="absolute -top-7 left-0 rounded bg-red-500 px-2 py-1 text-xs font-medium text-white">
-                              {item.class} {(item.confidence * 100).toFixed(1)}%
-                            </span>
-                          </div>
-                        );
-                      })}
+                      {renderBoxes(
+                        detectionResults?.detections,
+                        imageSize.naturalWidth,
+                        imageSize.naturalHeight
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -240,17 +303,39 @@ export function DetectionPage() {
             </CardHeader>
 
             <CardContent className="space-y-4">
-              <div className="flex aspect-video items-center justify-center rounded-lg border bg-black">
+              <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg border bg-black">
                 {isWebcamActive ? (
-                  <div className="relative size-full">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Camera className="size-12 text-white/50" />
-                    </div>
+                  <div className="relative h-full w-full">
+                    <Webcam
+                      ref={webcamRef}
+                      audio={false}
+                      screenshotFormat="image/jpeg"
+                      className="absolute inset-0 h-full w-full object-cover"
+                      videoConstraints={{
+                        width: 1280,
+                        height: 720,
+                        facingMode: "environment",
+                      }}
+                    />
+
+                    {webcamResults?.image_width &&
+                      webcamResults?.image_height &&
+                      renderBoxes(
+                        webcamResults.detections,
+                        webcamResults.image_width,
+                        webcamResults.image_height
+                      )}
 
                     <div className="absolute bottom-4 left-4">
                       <Badge variant="destructive" className="animate-pulse">
                         <div className="mr-2 size-2 rounded-full bg-white" />
                         LIVE
+                      </Badge>
+                    </div>
+
+                    <div className="absolute right-4 top-4">
+                      <Badge variant="secondary">
+                        {isWebcamProcessing ? "Analyzing..." : "YOLO Ready"}
                       </Badge>
                     </div>
                   </div>
@@ -279,6 +364,17 @@ export function DetectionPage() {
                   </>
                 )}
               </Button>
+
+              {webcamResults && (
+                <div className="rounded-lg border bg-muted/30 p-4">
+                  <p className="text-sm text-muted-foreground">
+                    Live detections
+                  </p>
+                  <p className="mt-1 text-2xl font-semibold">
+                    {webcamResults.total_detections}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

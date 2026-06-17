@@ -1,0 +1,2 @@
+model,phase,precision,recall,mAP50,mAP50_95
+augmented_yolov8,validation,0.847,0.889,0.925,0.829

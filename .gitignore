@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+backend/venv/
+venv/
+
+
+# Node / React
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
+# Dataset
+*.zip
+dataset/
+tomato_dataset/
+train/
+valid/
+test/
+negative_images/
+negative_raw/
+negative_augmented/
+
+# YOLO / training outputs
+runs/
+*.cache
+
+# Runtime backend folders
+backend/uploads/*
+backend/results/*
+
+# Keep empty runtime folders
+!backend/uploads/.gitkeep
+!backend/results/.gitkeep
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db

@@ -23,3 +23,34 @@ Ma contribution principale dans ce projet a porté sur l'intégration du modèle
 ### Remarque
 
 Le modèle YOLOv8 final utilisé dans l'application a été entraîné et validé par un autre membre de l'équipe. Ma contribution a consisté à intégrer ce modèle dans une application web fonctionnelle permettant la détection sur image et la détection en temps réel via webcam.
+
+## Contribution personnelle - Khadija El Gourain
+
+Ma contribution principale dans ce projet a porté sur la partie modèle YOLOv8 pour la détection et la classification des tomates.
+
+### Modèle et entraînement
+
+- Préparation et vérification du dataset au format YOLOv8.
+- Entraînement d’un modèle baseline YOLOv8n.
+- Évaluation du modèle avec les métriques Precision, Recall, mAP50 et mAP50-95.
+- Analyse des courbes de loss : box_loss, cls_loss et dfl_loss.
+- Étude du surapprentissage à partir des courbes train/validation.
+
+### Améliorations testées
+
+- Entraînement avec data augmentation.
+- Ajout d’images négatives pour réduire les fausses détections sur des objets non-tomates.
+- Création de labels vides pour les images négatives.
+- Comparaison entre baseline, modèle augmenté et modèle avec images négatives.
+
+### Analyse des résultats
+
+- Analyse des matrices de confusion.
+- Comparaison des performances entre les différents modèles.
+- Test du modèle sur des images réelles.
+- Identification des limites du modèle sur des images complexes : tomates avec poivrons, mains, objets rouges ou fonds de cuisine.
+
+### Conclusion
+
+Le modèle baseline reste le plus stable pour la détection standard des tomates.  
+L’expérience avec images négatives est conservée comme amélioration de robustesse, mais elle nécessite davantage d’images réelles mixtes pour devenir plus fiable en conditions réelles.

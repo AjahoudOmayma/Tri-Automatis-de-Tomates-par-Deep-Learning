@@ -64,6 +64,13 @@ dataset/
 ## Note
 
 The dataset was verified before training. Each image has a corresponding label file. The YOLOv8 labels were checked and the `data.yaml` paths were corrected for Google Colab.
+## Dataset limitation
+
+The dataset is not perfectly balanced across all classes. The `Anthracnose` class is under-represented, especially in the test set.
+
+Only a very small number of Anthracnose images are available for final testing. This makes the evaluation of this class less reliable.
+
+Because of this imbalance, the confusion matrix may show poor results for Anthracnose, even if the model performs well on other classes such as Healthy Tomato, Blossom end rot and Spotted wilt Virus.
 ## Negative images source
 
 The negative images were collected to improve robustness against false detections.

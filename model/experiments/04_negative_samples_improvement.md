@@ -41,9 +41,6 @@ Examples of negative images:
 - orange
 - pepper
 - face
-- hand
-- kitchen background
-- empty table
 - other vegetables without tomatoes
 
 ## YOLO negative labels
@@ -55,3 +52,13 @@ Example:
 ```text
 train/images/apple_001.jpg
 train/labels/apple_001.txt
+
+## Discussion
+
+The negative samples experiment was added to reduce false detections on non-tomato objects such as fruits, vegetables and faces.
+
+However, the negative dataset used in this experiment was relatively simple. Many negative images contained isolated objects on simple backgrounds. This helped the model learn to ignore some non-tomato objects, but it was not sufficient to fully solve real-world cases where tomatoes appear together with peppers, onions, hands or other objects.
+
+The experiment improved robustness on some negative examples, but it also made the model more conservative and sometimes less stable on real tomato images.
+
+Therefore, negative samples are kept as an important robustness experiment, but the next improvement should use mixed real-world images containing tomatoes and non-tomato objects together, with annotations only on tomatoes.

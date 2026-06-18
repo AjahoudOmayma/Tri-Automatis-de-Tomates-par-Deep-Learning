@@ -114,7 +114,7 @@ def predict_frame():
 
         results = model.predict(
             source=frame,
-            conf=0.25,
+            conf=0.30,
             verbose=False
         )
 

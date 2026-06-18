@@ -170,28 +170,6 @@ def predict():
     h, w = img.shape[:2]
 
     try:
-
-        image_data = data["image"]
-
-        if "," in image_data:
-            image_data = image_data.split(",")[1]
-
-        image_bytes = base64.b64decode(image_data)
-        np_arr = np.frombuffer(image_bytes, np.uint8)
-        frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-
-        if frame is None:
-            return jsonify({"error": "Frame invalide"}), 400
-
-        height, width = frame.shape[:2]
-
-        results = model.predict(
-            source=frame,
-            conf=0.30,
-            verbose=False
-        )
-
-
         results = model.predict(path, conf=0.25, verbose=False)
 
         detections = extract_detections(results)
@@ -204,6 +182,7 @@ def predict():
             "total_detections": len(detections),
             "detections": detections
         })
+
     except Exception as e:
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
 

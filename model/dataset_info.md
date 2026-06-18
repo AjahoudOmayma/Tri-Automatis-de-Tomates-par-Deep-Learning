@@ -64,3 +64,21 @@ dataset/
 ## Note
 
 The dataset was verified before training. Each image has a corresponding label file. The YOLOv8 labels were checked and the `data.yaml` paths were corrected for Google Colab.
+## Negative images source
+
+The negative images were collected to improve robustness against false detections.
+
+They include manually taken images and images of non-tomato objects such as:
+
+- peppers;
+- carrots;
+- onions;
+- apples;
+- oranges;
+- cucumbers;
+- faces;
+- other fruits and vegetables.
+
+These images were not annotated with object boxes. Instead, each negative image has an empty YOLO label file.
+
+The goal is not to classify these objects. The goal is to teach YOLOv8 that these images do not contain tomato objects.

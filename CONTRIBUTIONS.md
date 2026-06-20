@@ -24,6 +24,29 @@ Ma contribution principale dans ce projet a porté sur l'intégration du modèle
 
 Le modèle YOLOv8 final utilisé dans l'application a été entraîné et validé par un autre membre de l'équipe. Ma contribution a consisté à intégrer ce modèle dans une application web fonctionnelle permettant la détection sur image et la détection en temps réel via webcam.
 
+## Contribution personnelle - L'BREK Oumaima
+
+Ma contribution principale dans ce projet a porté sur le développement de la page Dashboard et sur l’intégration des données de détection dans l’interface web.
+
+### Frontend
+
+* Conception et développement de la page `dashboard.tsx`.
+* Mise en place d’une vue synthétique des résultats de détection.
+* Affichage des indicateurs principaux du projet sous forme de cartes statistiques (KPI) pour les quatre classes : Healthy Tomato, Anthracnose, Blossom End Rot et Spotted Wilt Virus.
+* Développement d’un graphique de tendances pour visualiser l’évolution des détections.
+* Intégration d’une section de suivi des performances système avec des métriques globales comme le nombre total d’images analysées, la moyenne de confiance et le temps moyen d’inférence.
+* Réalisation d’un tableau des détections récentes pour présenter la date, le total des détections, la répartition par classe, le niveau de confiance et le statut.
+
+### Backend
+
+* Modification du fichier `app.py` afin d’exploiter correctement les résultats retournés par le modèle de détection.
+* Structuration des données nécessaires au dashboard pour l’analyse statistique : `totalDetections`, `anthracnose`, `blossomEndRot`, `healthy`, `spottedWiltVirus` et `averageConfidence`.
+* Contribution à l’intégration entre le backend et le frontend pour permettre la récupération et l’affichage cohérents des résultats de détection.
+
+### Conclusion
+
+Cette contribution m’a permis de participer à la mise en place d’une interface de visualisation claire et fonctionnelle, reliant le backend de détection au frontend. Grâce au dashboard et à l’exploitation des données dans `app.py`, le projet offre une meilleure lecture des résultats, une visualisation plus structurée des performances et une expérience utilisateur plus complète.
+
 ## Contribution personnelle - Khadija El Gourain
 
 Ma contribution principale dans ce projet a porté sur la partie modèle YOLOv8 pour la détection et la classification des tomates.

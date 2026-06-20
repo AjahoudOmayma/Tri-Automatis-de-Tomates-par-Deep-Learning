@@ -106,3 +106,30 @@ Ma contribution principale dans ce projet a porté sur le développement du syst
 ### Remarque
 
 Ma contribution a consisté à concevoir et intégrer un système complet de suivi et de consultation de l'historique des détections au sein de l'application web.
+
+## Contribution personnelle - Wiam Outchadmit 
+
+Ma contribution personnelle a porté sur le développement des pages Results et Performance ainsi que sur l’exploitation des données de détection pour l’analyse et la visualisation des résultats.
+
+### Frontend — Results Interpretation
+
+* Conception et développement de la page Results Interpretation pour l’analyse globale des détections.
+* Implémentation du calcul automatique des indicateurs à partir de l’historique des résultats (taux de classes, confiance moyenne et total des détections).
+* Mise en place d’une analyse globale de l’état du système (Stable / Warning / Critical) basée sur la proportion de maladies détectées.
+* Ajout d’un système de recommandations automatiques basé sur les résultats du modèle.
+* Développement d’une analyse comparative des sessions afin d’identifier la meilleure session et la session la plus critique.
+
+### Frontend — Model Performance
+
+* Conception et développement de la page Model Performance pour l’évaluation des performances du modèle YOLOv8.
+* Remplacement des données statiques par des métriques calculées à partir des données réelles du backend.
+* Implémentation des métriques de performance : Accuracy, Precision, Recall et F1-Score.
+* Mise en place de visualisations avancées (Radar Chart, courbe d’inférence et distribution des classes).
+* Exploitation des données de détection pour produire des indicateurs de performance cohérents et dynamiques.
+
+### Backend — Exploitation des données
+
+* Utilisation des données issues de l’API `/history` pour la génération des analyses statistiques.
+* Structuration et exploitation des résultats du modèle (classes détectées, scores de confiance et horodatage) pour l’analyse frontend.
+
+

@@ -54,3 +54,32 @@ Ma contribution principale dans ce projet a porté sur la partie modèle YOLOv8 
 
 Le modèle baseline reste le plus stable pour la détection standard des tomates.  
 L’expérience avec images négatives est conservée comme amélioration de robustesse, mais elle nécessite davantage d’images réelles mixtes pour devenir plus fiable en conditions réelles.
+
+## Contribution personnelle – Laila Ilillou
+
+Ma contribution principale dans ce projet a porté sur le développement du système d'historique des détections.
+
+### Backend Flask
+
+* Développement du système d'enregistrement des prédictions dans un fichier `history.json`.
+* Création des fonctions de sauvegarde et de récupération de l'historique.
+* Ajout de l'API `/history` permettant d'accéder aux détections enregistrées.
+* Enregistrement de la date, du nom de l'image, des classes détectées et du score moyen de confiance après chaque prédiction.
+
+### Frontend React
+
+* Développement et amélioration de la page `history.tsx`.
+* Affichage des détections enregistrées sous forme de tableau.
+* Affichage de la date et de l'heure de chaque prédiction.
+* Affichage du nombre de détections pour chaque classe :
+
+  * Anthracnose
+  * Blossom End Rot
+  * Healthy Tomato
+  * Spotted Wilt Virus
+* Mise en place de la recherche et du filtrage des historiques par classe.
+* Ajout de la pagination pour faciliter la consultation des résultats.
+
+### Remarque
+
+Ma contribution a consisté à concevoir et intégrer un système complet de suivi et de consultation de l'historique des détections au sein de l'application web.
